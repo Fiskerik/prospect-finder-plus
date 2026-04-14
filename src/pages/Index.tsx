@@ -7,33 +7,33 @@ import heroImage from "@/assets/hero-illustration.jpg";
 const features = [
   {
     icon: Users,
-    title: "Extrahera deltagare",
-    description: "Hämta alla deltagare från LinkedIn-events med ett enda klick.",
+    title: "Extract Attendees",
+    description: "Pull all attendees from LinkedIn events with a single click.",
   },
   {
     icon: FileSpreadsheet,
-    title: "Exportera till CSV",
-    description: "Exportera kontaktlistor direkt till CSV eller din CRM.",
+    title: "Export to CSV",
+    description: "Export contact lists directly to CSV or your CRM.",
   },
   {
     icon: Zap,
-    title: "Snabb & enkel",
-    description: "Ingen komplicerad setup — installera och börja prospektera direkt.",
+    title: "Fast & Simple",
+    description: "No complicated setup — install and start prospecting right away.",
   },
   {
     icon: Shield,
-    title: "Spara lokalt",
-    description: "Din data stannar hos dig. Inget skickas till tredjepartsservrar.",
+    title: "Save Locally",
+    description: "Your data stays with you. Nothing is sent to third-party servers.",
   },
   {
     icon: Globe,
-    title: "CRM-integration",
-    description: "Koppla ihop med HubSpot och andra populära CRM-system.",
+    title: "CRM Integration",
+    description: "Connect with HubSpot and other popular CRM systems.",
   },
   {
     icon: Download,
-    title: "PDF-export",
-    description: "Skapa professionella PDF-rapporter av dina kontaktlistor.",
+    title: "PDF Export",
+    description: "Create professional PDF reports of your contact lists.",
   },
 ];
 
@@ -48,9 +48,9 @@ const Index = () => {
             <span className="text-xl font-bold text-foreground">Prospect In</span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">Funktioner</a>
-            <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">Hur det fungerar</a>
-            <Button variant="hero" size="sm">Ladda ner</Button>
+            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">Features</a>
+            <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">How It Works</a>
+            <Button variant="hero" size="sm">Download</Button>
           </div>
         </div>
       </nav>
@@ -63,24 +63,24 @@ const Index = () => {
               <Zap className="w-4 h-4" /> Chrome Extension
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-              Hämta prospekt från <span className="text-primary">LinkedIn Events</span>
+              Extract prospects from <span className="text-primary">LinkedIn Events</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg">
-              Extrahera deltagare från LinkedIn-events och exportera dem till CSV, PDF eller direkt till ditt CRM — med ett klick.
+              Pull attendees from LinkedIn events and export them to CSV, PDF, or directly to your CRM — with one click.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button variant="hero" size="lg">
                 <Download className="w-5 h-5" />
-                Installera gratis
+                Install for Free
               </Button>
               <Button variant="outline" size="lg">
-                Se demo
+                Watch Demo
               </Button>
             </div>
           </div>
           <div className="relative">
             <div className="rounded-2xl overflow-hidden shadow-2xl border border-border">
-              <img src={heroImage} alt="Prospect In i aktion" width={1280} height={720} className="w-full" />
+              <img src={heroImage} alt="Prospect In in action" width={1280} height={720} className="w-full" />
             </div>
           </div>
         </div>
@@ -90,9 +90,9 @@ const Index = () => {
       <section id="features" className="py-20 px-4 bg-secondary/50">
         <div className="container mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Allt du behöver för prospektering</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Everything you need for prospecting</h2>
             <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-              Prospect In gör det enkelt att hitta och samla in kontakter från LinkedIn-events.
+              Prospect In makes it easy to find and collect contacts from LinkedIn events.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -115,13 +115,13 @@ const Index = () => {
       <section id="how-it-works" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Så fungerar det</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">How It Works</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
-              { step: "1", title: "Installera tillägget", desc: "Ladda ner Prospect In från Chrome Web Store." },
-              { step: "2", title: "Öppna ett LinkedIn-event", desc: "Gå till valfritt LinkedIn-event och klicka på tillägget." },
-              { step: "3", title: "Exportera deltagare", desc: "Hämta alla deltagare och exportera till CSV, PDF eller CRM." },
+              { step: "1", title: "Install the Extension", desc: "Download Prospect In from the Chrome Web Store." },
+              { step: "2", title: "Open a LinkedIn Event", desc: "Navigate to any LinkedIn event and click the extension." },
+              { step: "3", title: "Export Attendees", desc: "Pull all attendees and export to CSV, PDF, or your CRM." },
             ].map((s) => (
               <div key={s.step} className="text-center space-y-4">
                 <div className="w-14 h-14 rounded-full gradient-primary flex items-center justify-center mx-auto text-primary-foreground text-xl font-bold">
@@ -139,13 +139,13 @@ const Index = () => {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="gradient-hero rounded-2xl p-12 text-center space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground">Börja prospektera idag</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground">Start Prospecting Today</h2>
             <p className="text-primary-foreground/70 max-w-lg mx-auto">
-              Installera Prospect In och börja samla in leads från LinkedIn-events på några sekunder.
+              Install Prospect In and start collecting leads from LinkedIn events in seconds.
             </p>
             <Button variant="hero" size="lg" className="shadow-xl">
               <Download className="w-5 h-5" />
-              Installera gratis
+              Install for Free
             </Button>
           </div>
         </div>
@@ -158,7 +158,7 @@ const Index = () => {
             <img src={logo} alt="Prospect In" width={24} height={24} />
             <span className="font-semibold text-foreground text-sm">Prospect In</span>
           </div>
-          <p className="text-sm text-muted-foreground">© 2026 Prospect In. Alla rättigheter förbehållna.</p>
+          <p className="text-sm text-muted-foreground">© 2026 Prospect In. All rights reserved.</p>
         </div>
       </footer>
     </div>
