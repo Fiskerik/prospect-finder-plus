@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Users, Download, FileSpreadsheet, Shield, Zap, Globe } from "lucide-react";
 import logo from "@/assets/prospect-in-logo.png";
 import heroImage from "@/assets/hero-illustration.jpg";
+import chromeLogo from "@/assets/chrome-logo.png";
+import { Link } from "react-router-dom";
 
 const features = [
   {
@@ -60,7 +62,7 @@ const Index = () => {
         <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-sm text-secondary-foreground font-medium">
-              <Zap className="w-4 h-4" /> Chrome Extension
+              <img src={chromeLogo} alt="Chrome" width={18} height={18} /> Chrome Extension
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
               Extract prospects from <span className="text-primary">LinkedIn Events</span>
@@ -157,6 +159,10 @@ const Index = () => {
           <div className="flex items-center gap-2">
             <img src={logo} alt="Prospect In" width={24} height={24} />
             <span className="font-semibold text-foreground text-sm">Prospect In</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link>
           </div>
           <p className="text-sm text-muted-foreground">© 2026 Prospect In. All rights reserved.</p>
         </div>
