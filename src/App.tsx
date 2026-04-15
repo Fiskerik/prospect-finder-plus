@@ -7,6 +7,14 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import Terms from "./pages/Terms.tsx";
+import Checkout from "./pages/Checkout.tsx";
+import CheckoutSuccess from "./pages/CheckoutSuccess.tsx";
+import AuthCallback from "./pages/AuthCallback.tsx";
+
+// I Routes:
+<Route path="/checkout" element={<Checkout />} />
+<Route path="/checkout/success" element={<CheckoutSuccess />} />
+<Route path="/auth/callback" element={<AuthCallback />} />
 
 const queryClient = new QueryClient();
 
