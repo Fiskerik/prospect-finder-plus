@@ -11,10 +11,7 @@ import Checkout from "./pages/Checkout.tsx";
 import CheckoutSuccess from "./pages/CheckoutSuccess.tsx";
 import AuthCallback from "./pages/AuthCallback.tsx";
 
-// I Routes:
-<Route path="/checkout" element={<Checkout />} />
-<Route path="/checkout/success" element={<CheckoutSuccess />} />
-<Route path="/auth/callback" element={<AuthCallback />} />
+
 
 const queryClient = new QueryClient();
 
@@ -28,6 +25,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout/success" element={<CheckoutSuccess />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
