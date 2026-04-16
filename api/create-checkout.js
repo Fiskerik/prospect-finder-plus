@@ -1,10 +1,9 @@
-// api/create-checkout.js
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
-  // CORS-hantering
+  // CORS-inställningar för att tillåta anrop
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -19,6 +18,7 @@ export default async function handler(req, res) {
 
   const { priceId, email } = req.body;
 
+  // Kontrollera att nödvändig data skickades med
   if (!priceId) {
     return res.status(400).json({ error: "priceId is required" });
   }
@@ -31,9 +31,8 @@ export default async function handler(req, res) {
           quantity: 1,
         },
       ],
-      mode: 'payment',
+      mode: 'payment', // Ändra till 'subscription' om det är en prenumeration
       customer_email: email,
-      // req.headers.origin fungerar bra på Vercel för att hitta din domän
       success_url: `${req.headers.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.origin}/checkout`,
     });
