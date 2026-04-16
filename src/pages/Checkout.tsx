@@ -45,8 +45,8 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          priceId: planInfo.stripeId, // Skickar det faktiska Stripe ID:t
-          email: "" // Kan lämnas tom om Stripe ska fråga efter mail, eller fyllas i om du har den
+          plan: planKey,  
+          email: "" 
         }),
       });
 

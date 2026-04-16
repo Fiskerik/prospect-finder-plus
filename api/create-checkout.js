@@ -2,6 +2,11 @@
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const PRICES = {
+  single: process.env.STRIPE_PRICE_1,
+  five:   process.env.STRIPE_PRICE_5,
+  ten:    process.env.STRIPE_PRICE_10,
+};
 
 export default async function handler(req, res) {
   // CORS-hantering
