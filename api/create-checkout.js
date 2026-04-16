@@ -1,38 +1,46 @@
-// /api/create-checkout.js  (Vercel serverless function)
-// POST { plan: "single"|"five"|"ten", user_id, success_url, cancel_url }
+// api/create-checkout.js
+import Stripe from 'stripe';
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const PLANS = {
-  single: { price: process.env.STRIPE_PRICE_1,  credits: 1  },
-  five:   { price: process.env.STRIPE_PRICE_5,  credits: 5  },
-  ten:    { price: process.env.STRIPE_PRICE_10, credits: 10 }
-};
-
-module.exports = async (req, res) => {
-  // CORS for extension
+export default async function handler(req, res) {
+  // CORS-hantering
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { plan, user_id, success_url, cancel_url } = req.body;
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
-  if (!PLANS[plan]) return res.status(400).json({ error: "Invalid plan" });
-  if (!user_id)     return res.status(400).json({ error: "user_id required" });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const { priceId, email } = req.body;
+
+  if (!priceId) {
+    return res.status(400).json({ error: "priceId is required" });
+  }
 
   try {
     const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      line_items: [{ price: PLANS[plan].price, quantity: 1 }],
-      metadata: { user_id, plan, credits: PLANS[plan].credits },
-      success_url: success_url || `${process.env.APP_PUBLIC_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  cancel_url  || `${process.env.APP_PUBLIC_URL}/checkout/cancel`
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      customer_email: email,
+      // req.headers.origin fungerar bra på Vercel för att hitta din domän
+      success_url: `${req.headers.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.origin}/checkout`,
     });
-    res.json({ url: session.url });
+
+    return res.status(200).json({ url: session.url });
   } catch (err) {
     console.error("Stripe checkout error:", err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
-};
+}
