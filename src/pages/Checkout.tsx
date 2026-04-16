@@ -6,17 +6,17 @@ const PLAN_DETAILS: Record<string, { label: string; price: string; stripeId: str
   single: { 
     label: "1 full report", 
     price: "$9.99", 
-    stripeId: "price_1RAf5hE6OStYVlYm8YV69W8G" 
+    stripeId: "STRIPE_PRICE_1" 
   },
   five: { 
     label: "5 full reports", 
     price: "$39.99", 
-    stripeId: "price_1RAf69E6OStYVlYmjWv6R7Z3" 
+    stripeId: "STRIPE_PRICE_5" 
   },
   ten: { 
     label: "10 full reports", 
     price: "$69.99", 
-    stripeId: "price_1RAf6TE6OStYVlYmGZ6R7Z3" 
+    stripeId: "STRIPE_PRICE_10" 
   },
 };
 
