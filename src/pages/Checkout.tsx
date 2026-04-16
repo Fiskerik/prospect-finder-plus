@@ -1,34 +1,57 @@
 // src/pages/Checkout.tsx
 import { useEffect, useState } from "react";
 
-const PLAN_LABELS: Record<string, { label: string; price: string; credits: number }> = {
-  single: { label: "1 full report", price: "$9.99", credits: 1 },
-  five: { label: "5 full reports", price: "$39.99", credits: 5 },
-  ten: { label: "10 full reports", price: "$69.99", credits: 10 },
+// Dessa mappar namnet på planen till de specifika Price ID:n som syns i din Stripe-bild
+const PLAN_DETAILS: Record<string, { label: string; price: string; stripeId: string }> = {
+  single: { 
+    label: "1 full report", 
+    price: "$9.99", 
+    stripeId: "price_1RAf5hE6OStYVlYm8YV69W8G" 
+  },
+  five: { 
+    label: "5 full reports", 
+    price: "$39.99", 
+    stripeId: "price_1RAf69E6OStYVlYmjWv6R7Z3" 
+  },
+  ten: { 
+    label: "10 full reports", 
+    price: "$69.99", 
+    stripeId: "price_1RAf6TE6OStYVlYmGZ6R7Z3" 
+  },
 };
 
 export default function CheckoutPage() {
   const params = new URLSearchParams(window.location.search);
-  const plan = params.get("plan") ?? "single";
+  const planKey = params.get("plan") ?? "single";
   const userId = params.get("user_id") ?? "";
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const planInfo = PLAN_LABELS[plan] ?? PLAN_LABELS.single;
+  // Hämta rätt info baserat på URL-parametern
+  const planInfo = PLAN_DETAILS[planKey] ?? PLAN_DETAILS.single;
 
   async function handleCheckout() {
     if (!userId) {
       setError("No user ID found. Please sign in via the extension first.");
       return;
     }
+
     setLoading(true);
+    setError("");
+
     try {
       const res = await fetch("/api/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, user_id: userId }),
+        body: JSON.stringify({ 
+          priceId: planInfo.stripeId, // Skickar det faktiska Stripe ID:t
+          email: "" // Kan lämnas tom om Stripe ska fråga efter mail, eller fyllas i om du har den
+        }),
       });
+
       const data = await res.json();
+
       if (data.url) {
         window.location.href = data.url;
       } else {
@@ -41,9 +64,12 @@ export default function CheckoutPage() {
     }
   }
 
+  // Kör checkout automatiskt om vi har ett userId när sidan laddas
   useEffect(() => {
-    if (userId) handleCheckout();
-  }, []);
+    if (userId) {
+      handleCheckout();
+    }
+  }, [userId]);
 
   return (
     <div
@@ -59,6 +85,7 @@ export default function CheckoutPage() {
       <p style={{ color: "#5f6b7a", marginBottom: 24 }}>
         You selected: <strong>{planInfo.label}</strong> — {planInfo.price}
       </p>
+
       {error && (
         <p
           style={{
@@ -73,6 +100,7 @@ export default function CheckoutPage() {
           {error}
         </p>
       )}
+
       <button
         onClick={handleCheckout}
         disabled={loading}
@@ -86,10 +114,12 @@ export default function CheckoutPage() {
           fontWeight: 600,
           cursor: loading ? "not-allowed" : "pointer",
           opacity: loading ? 0.7 : 1,
+          transition: "background 0.2s",
         }}
       >
         {loading ? "Redirecting to Stripe…" : "Continue to payment"}
       </button>
+
       <p style={{ marginTop: 14, fontSize: 12, color: "#8895a7" }}>
         After payment, credits appear in the extension within seconds.
       </p>
