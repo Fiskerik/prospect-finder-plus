@@ -52,7 +52,9 @@ const Index = () => {
           <div className="flex items-center gap-4">
             <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">Features</a>
             <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">How It Works</a>
-            <Button variant="hero" size="sm">Download</Button>
+            <Button variant="hero" size="sm" asChild>
+              <a href="https://chromewebstore.google.com/detail/prospect-in/nofakbgapbfghkpdlnkfaenigenlppdg/" target="_blank" rel="noopener noreferrer">Download</a>
+            </Button>
           </div>
         </div>
       </nav>
@@ -71,9 +73,11 @@ const Index = () => {
               Pull attendees from LinkedIn events and export them to CSV, PDF, or directly to your CRM — with one click.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="hero" size="lg">
-                <Download className="w-5 h-5" />
-                Install for Free
+              <Button variant="hero" size="lg" asChild>
+                <a href="https://chromewebstore.google.com/detail/prospect-in/nofakbgapbfghkpdlnkfaenigenlppdg/" target="_blank" rel="noopener noreferrer">
+                  <Download className="w-5 h-5" />
+                  Install for Free
+                </a>
               </Button>
               <Button variant="outline" size="lg">
                 Watch Demo
@@ -145,9 +149,11 @@ const Index = () => {
             <p className="text-primary-foreground/70 max-w-lg mx-auto">
               Install Prospect In and start collecting leads from LinkedIn events in seconds.
             </p>
-            <Button variant="hero" size="lg" className="shadow-xl">
-              <Download className="w-5 h-5" />
-              Install for Free
+            <Button variant="hero" size="lg" className="shadow-xl" asChild>
+              <a href="https://chromewebstore.google.com/detail/prospect-in/nofakbgapbfghkpdlnkfaenigenlppdg/" target="_blank" rel="noopener noreferrer">
+                <Download className="w-5 h-5" />
+                Install for Free
+              </a>
             </Button>
           </div>
         </div>
