@@ -37,6 +37,7 @@ export default async function handler(req, res) {
       mode: 'payment',
       success_url: `${req.headers.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.origin}/checkout`,
+      allow_promotion_codes: true,
     };
 
     // Lägg bara till customer_email om email faktiskt har ett värde
