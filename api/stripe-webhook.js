@@ -2,8 +2,10 @@
 // Stripe sends POST here after payment — we add credits in Supabase.
 // Works for both paid purchases AND $0 sessions (e.g. full promo-code discount).
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const { createClient } = require("@supabase/supabase-js");
+import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -22,7 +24,7 @@ async function getRawBody(req) {
   });
 }
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
   const rawBody = await getRawBody(req);
