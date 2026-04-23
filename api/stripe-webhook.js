@@ -87,17 +87,37 @@ module.exports = async (req, res) => {
       return res.status(200).json({ received: true, skipped: "already processed" });
     }
 
-    // Add credits atomically
-    const { error: creditError } = await supabase.rpc("add_credits", {
-      uid: user_id,
-      amount: creditsToAdd,
-    });
+    // Add credits via direct UPDATE on profiles (no RPC required).
+    // Read current credits, then write incremented value.
+    const { data: profile, error: fetchErr } = await supabase
+      .from("profiles")
+      .select("credits")
+      .eq("id", user_id)
+      .maybeSingle();
+
+    if (fetchErr) {
+      console.error("[webhook] failed to fetch profile:", fetchErr);
+      return res.status(500).json({ error: "DB fetch failed" });
+    }
+
+    if (!profile) {
+      console.error(`[webhook] no profile found for user_id=${user_id}`);
+      return res.status(500).json({ error: "Profile not found" });
+    }
+
+    const newCredits = (profile.credits || 0) + creditsToAdd;
+    const { error: creditError } = await supabase
+      .from("profiles")
+      .update({ credits: newCredits })
+      .eq("id", user_id);
 
     if (creditError) {
-      console.error("Supabase add_credits error:", creditError);
+      console.error("[webhook] credits update error:", creditError);
       // Return 500 so Stripe retries
       return res.status(500).json({ error: "DB credit update failed" });
     }
+
+    console.log(`[webhook] credits ${profile.credits || 0} -> ${newCredits} for user ${user_id}`);
 
     // Record this session as processed (prevents double-crediting on retries)
     const { error: logError } = await supabase
