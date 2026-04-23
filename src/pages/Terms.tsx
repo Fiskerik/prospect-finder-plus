@@ -28,7 +28,7 @@ const Terms = () => {
           <p>We reserve the right to modify these Terms at any time. Continued use of the Extension after changes constitutes acceptance of the new Terms.</p>
 
           <h2 className="text-xl font-semibold text-foreground">8. Contact</h2>
-          <p>For questions about these Terms, contact us at <a href="mailto:support@prospectin.app" className="text-primary hover:underline">support@prospectin.app</a>.</p>
+          <p>For questions about these Terms, contact us at <a href="mailto:eaconsulting.supp@gmail.com" className="text-primary hover:underline">eaconsulting.supp@gmail.com</a>.</p>
         </div>
       </div>
     </div>

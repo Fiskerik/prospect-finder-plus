@@ -25,7 +25,7 @@ const PrivacyPolicy = () => {
           <p>We may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated revision date.</p>
 
           <h2 className="text-xl font-semibold text-foreground">7. Contact Us</h2>
-          <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:support@prospectin.app" className="text-primary hover:underline">support@prospectin.app</a>.</p>
+          <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:eaconsulting.supp@gmail.com" className="text-primary hover:underline">eaconsulting.supp@gmail.com</a>.</p>
         </div>
       </div>
     </div>
