@@ -36,8 +36,25 @@ module.exports = async (req, res) => {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
+  console.log(`[webhook] received event: ${event.type} id=${event.id}`);
+
+  // Handle both regular completion and async payment success.
+  // For $0 (100% promo) sessions, Stripe still fires checkout.session.completed.
+  if (
+    event.type === "checkout.session.completed" ||
+    event.type === "checkout.session.async_payment_succeeded"
+  ) {
+    let session = event.data.object;
+
+    // Re-fetch the session to ensure we have the freshest metadata
+    // (in some cases the webhook payload metadata can be stale/missing).
+    try {
+      session = await stripe.checkout.sessions.retrieve(session.id);
+    } catch (e) {
+      console.warn("[webhook] could not re-fetch session, using payload:", e.message);
+    }
+
+    console.log(`[webhook] session ${session.id} amount_total=${session.amount_total} payment_status=${session.payment_status} metadata=`, session.metadata);
 
     // Metadata is set in create-checkout.js on the session itself
     const user_id = session.metadata?.user_id;
