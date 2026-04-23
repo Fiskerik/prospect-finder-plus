@@ -37,16 +37,16 @@ export default async function handler(req, res) {
 
   try {
     // Find or create a Stripe customer tied to this Supabase user_id.
-    // This is what makes Stripe's "once per customer" promo restriction work.
+    // Using customers.list is more reliable than customers.search (no special API version needed).
     let customerId = null;
-    const existing = await stripe.customers.search({
-      query: `metadata['supabase_user_id']:'${user_id}'`,
-      limit: 1,
-    });
 
-    if (existing.data.length > 0) {
-      customerId = existing.data[0].id;
-    } else {
+    if (email && email.trim()) {
+      const existing = await stripe.customers.list({ email: email.trim(), limit: 10 });
+      const match = existing.data.find(c => c.metadata?.supabase_user_id === user_id);
+      if (match) customerId = match.id;
+    }
+
+    if (!customerId) {
       const customer = await stripe.customers.create({
         email: email && email.trim() ? email.trim() : undefined,
         metadata: { supabase_user_id: user_id },
