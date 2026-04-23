@@ -20,7 +20,7 @@ export default function CheckoutSuccess() {
 
     let cancelled = false;
     let attempts = 0;
-    const maxAttempts = 10; // ~20s of polling
+    const maxAttempts = 20; // ~40s of polling
 
     async function poll() {
       attempts += 1;
@@ -127,15 +127,26 @@ export default function CheckoutSuccess() {
     );
   }
 
-  // unknown / fallback (webhook didn't record within ~20s)
+  // unknown / fallback (webhook didn't record within ~40s)
   return (
     <div style={wrapStyle}>
-      <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
-      <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Payment received</h1>
+      <div style={{ fontSize: 48, marginBottom: 16 }}>⌛</div>
+      <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Still confirming…</h1>
       <p style={{ color: "#5f6b7a", marginBottom: 24 }}>
-        We're still confirming your purchase. Credits should appear in the extension shortly. If
-        they don't show up within a minute, sign out and back in.
+        We haven't received confirmation from our payment provider yet. If you used a promo code
+        you've redeemed before, no credits will be added (and you weren't charged). Otherwise,
+        credits should appear in the extension within a minute.
       </p>
+      <button
+        onClick={() => window.location.reload()}
+        style={{
+          background: "#0a66c2", color: "#fff", border: "none",
+          borderRadius: 999, padding: "12px 28px", fontSize: 14,
+          fontWeight: 600, cursor: "pointer",
+        }}
+      >
+        Check again
+      </button>
     </div>
   );
 }
