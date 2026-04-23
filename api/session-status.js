@@ -1,7 +1,13 @@
 // api/session-status.js
-// Returns the result of a checkout session as recorded by our webhook.
-// The frontend uses this to show "Payment successful" vs "Promo already used".
+// Returns the result of a checkout session.
+// Primary source: our processed_sessions table (written by the webhook).
+// Fallback: Stripe directly — if the webhook hasn't written yet but Stripe
+// shows the session is complete with a promo that this user already used,
+// we can return blocked_promo_reused immediately.
+import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -21,7 +27,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "session_id is required" });
   }
 
-  // Poll-friendly: webhook may not have processed yet.
+  // 1. Check our DB first (the source of truth once the webhook ran).
   const { data, error } = await supabase
     .from("processed_sessions")
     .select("stripe_session_id, credits_added, promotion_code, amount_total")
@@ -33,22 +39,54 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "DB error" });
   }
 
-  if (!data) {
-    // Webhook hasn't processed this session yet — frontend should retry.
-    return res.status(200).json({ status: "pending" });
-  }
-
-  if (data.credits_added > 0) {
+  if (data) {
+    if (data.credits_added > 0) {
+      return res.status(200).json({
+        status: "credited",
+        credits: data.credits_added,
+        promotion_code: data.promotion_code,
+      });
+    }
     return res.status(200).json({
-      status: "credited",
-      credits: data.credits_added,
+      status: "blocked_promo_reused",
       promotion_code: data.promotion_code,
     });
   }
 
-  // credits_added === 0 means the webhook blocked it (promo reused)
-  return res.status(200).json({
-    status: "blocked_promo_reused",
-    promotion_code: data.promotion_code,
-  });
+  // 2. No row yet. Look at Stripe directly to give the user a faster answer.
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const userId = session.metadata?.user_id;
+    const discount = Array.isArray(session.discounts) ? session.discounts[0] : null;
+    const promoId = discount?.promotion_code
+      ? (typeof discount.promotion_code === "string"
+          ? discount.promotion_code
+          : discount.promotion_code.id)
+      : null;
+
+    // If a promo was used and this user already redeemed it on a prior session,
+    // we can answer immediately without waiting for the webhook.
+    if (userId && promoId) {
+      const { data: prior } = await supabase
+        .from("processed_sessions")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("promotion_code", promoId)
+        .neq("stripe_session_id", sessionId)
+        .maybeSingle();
+
+      if (prior) {
+        return res.status(200).json({
+          status: "blocked_promo_reused",
+          promotion_code: promoId,
+        });
+      }
+    }
+
+    // Session exists in Stripe but no DB row yet → webhook still running.
+    return res.status(200).json({ status: "pending" });
+  } catch (e) {
+    console.error("[session-status] Stripe lookup failed:", e.message);
+    return res.status(200).json({ status: "pending" });
+  }
 }
