@@ -89,6 +89,63 @@ export default async function handler(req, res) {
       return res.status(200).json({ received: true, skipped: "already processed" });
     }
 
+    // Extract promotion code (if any) from the session.
+    // Stripe puts it under session.discounts[].promotion_code (an ID like "promo_...").
+    // We resolve it to the human-readable code (e.g. "WELCOME10") for nicer logging,
+    // but match on the ID since that's stable.
+    let promotionCodeId = null;
+    let promotionCodeLabel = null;
+    try {
+      const discount = Array.isArray(session.discounts) ? session.discounts[0] : null;
+      if (discount?.promotion_code) {
+        promotionCodeId = typeof discount.promotion_code === "string"
+          ? discount.promotion_code
+          : discount.promotion_code.id;
+        try {
+          const pc = await stripe.promotionCodes.retrieve(promotionCodeId);
+          promotionCodeLabel = pc?.code ?? null;
+        } catch (e) {
+          console.warn("[webhook] could not resolve promo code label:", e.message);
+        }
+      }
+    } catch (e) {
+      console.warn("[webhook] error reading discounts:", e.message);
+    }
+
+    // Enforce: each promotion code can only be redeemed once per user.
+    if (promotionCodeId) {
+      const { data: priorPromo, error: priorErr } = await supabase
+        .from("processed_sessions")
+        .select("id, stripe_session_id")
+        .eq("user_id", user_id)
+        .eq("promotion_code", promotionCodeId)
+        .maybeSingle();
+
+      if (priorErr) {
+        console.error("[webhook] failed to check prior promo usage:", priorErr);
+        return res.status(500).json({ error: "DB promo check failed" });
+      }
+
+      if (priorPromo) {
+        console.warn(`[webhook] BLOCKED: user ${user_id} already redeemed promo ${promotionCodeLabel ?? promotionCodeId} (prior session ${priorPromo.stripe_session_id}). Skipping credit on session ${session.id}.`);
+        // Log the blocked attempt so it's visible and not retried by Stripe
+        await supabase.from("processed_sessions").insert({
+          stripe_session_id: session.id,
+          user_id,
+          credits_added: 0,
+          amount_total: session.amount_total,
+          promotion_code: promotionCodeId,
+          processed_at: new Date().toISOString(),
+        }).then(({ error }) => {
+          if (error) console.warn("[webhook] could not log blocked session:", error);
+        });
+        return res.status(200).json({
+          received: true,
+          blocked: "promo already redeemed by this user",
+        });
+      }
+    }
+
     // Add credits via direct UPDATE on profiles (no RPC required).
     // Read current credits, then write incremented value.
     const { data: profile, error: fetchErr } = await supabase
@@ -129,6 +186,7 @@ export default async function handler(req, res) {
         user_id,
         credits_added: creditsToAdd,
         amount_total: session.amount_total, // 0 for fully discounted sessions
+        promotion_code: promotionCodeId, // null if no promo was used
         processed_at: new Date().toISOString(),
       });
 
