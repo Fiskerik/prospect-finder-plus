@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Download, FileSpreadsheet, Shield, Zap, Globe, Play } from "lucide-react";
+import { Users, Download, FileSpreadsheet, Shield, Zap, Globe, Play, Lock, MousePointerClick, Gauge, Scale } from "lucide-react";
 import logo from "@/assets/prospect-in-logo.png";
 import heroImage from "@/assets/hero-illustration.jpg";
 import chromeLogo from "@/assets/chrome-logo.png";
@@ -211,6 +211,73 @@ const Index = () => {
                 <p className="text-muted-foreground text-sm">{s.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Compliance & Safe Use */}
+      <section id="compliance" className="py-20 px-4 bg-secondary/50 scroll-mt-20">
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 rounded-full bg-background px-4 py-1.5 text-sm text-foreground font-medium border border-border mb-4">
+              <Shield className="w-4 h-4 text-primary" /> Built for safe, compliant prospecting
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Privacy-first by design</h2>
+            <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+              Prospect In is independent and not affiliated with LinkedIn. We built it with strict guardrails so you can prospect responsibly and stay on the right side of GDPR and LinkedIn's terms.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Lock,
+                title: "100% local processing",
+                desc: "Attendee data is read and exported entirely in your browser. Nothing is sent to our servers.",
+              },
+              {
+                icon: MousePointerClick,
+                title: "User-initiated only",
+                desc: "The extension only runs when you click it. No background tracking, no automated browsing.",
+              },
+              {
+                icon: Gauge,
+                title: "Respects rate limits",
+                desc: "Built-in throttling avoids hammering LinkedIn so your account stays safe and within normal usage.",
+              },
+              {
+                icon: Scale,
+                title: "GDPR-aware guidance",
+                desc: "We surface only public event data and remind you to honor opt-outs and lawful outreach rules.",
+              },
+            ].map((item) => (
+              <Card key={item.title} className="border-border bg-card">
+                <CardContent className="pt-6 space-y-3">
+                  <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
+                    <item.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="mt-10 rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">
+            <p>
+              <strong className="text-foreground">A note on responsible use:</strong> Prospect In is a tool —
+              you are responsible for how you use the data you collect. Only contact people with a lawful basis,
+              respect LinkedIn's{" "}
+              <a
+                href="https://www.linkedin.com/legal/user-agreement"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                User Agreement
+              </a>
+              , honor unsubscribe requests, and never use exports for spam or harassment. Read our{" "}
+              <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link> and{" "}
+              <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link> for full details.
+            </p>
           </div>
         </div>
       </section>
