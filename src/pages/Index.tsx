@@ -1,10 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Download, FileSpreadsheet, Shield, Zap, Globe } from "lucide-react";
+import { Users, Download, FileSpreadsheet, Shield, Zap, Globe, Play } from "lucide-react";
 import logo from "@/assets/prospect-in-logo.png";
 import heroImage from "@/assets/hero-illustration.jpg";
 import chromeLogo from "@/assets/chrome-logo.png";
+import showcase1 from "@/assets/showcase-1.png";
+import showcase2 from "@/assets/showcase-2.png";
+import showcase3 from "@/assets/showcase-3.png";
+import showcase4 from "@/assets/showcase-4.png";
 import { Link } from "react-router-dom";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, type CarouselApi } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { useEffect, useRef, useState } from "react";
+
+const showcaseSlides = [
+  { src: showcase1, alt: "Step 1 — Navigate to LinkedIn Event" },
+  { src: showcase2, alt: "Step 2 — Activate Extension & Select CSV Format" },
+  { src: showcase3, alt: "Step 3 — Import to Your CRM" },
+  { src: showcase4, alt: "Step 4 — Seamless CRM Integration" },
+];
 
 const features = [
   {
@@ -40,6 +54,16 @@ const features = [
 ];
 
 const Index = () => {
+  const autoplay = useRef(Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true }));
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    api.on("select", () => setCurrent(api.selectedScrollSnap()));
+  }, [api]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
@@ -79,8 +103,11 @@ const Index = () => {
                   Install for Free
                 </a>
               </Button>
-              <Button variant="outline" size="lg">
-                Watch Demo
+              <Button variant="outline" size="lg" asChild>
+                <a href="#showcase">
+                  <Play className="w-5 h-5" />
+                  Showcase
+                </a>
               </Button>
             </div>
           </div>
@@ -117,8 +144,55 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Showcase */}
+      <section id="showcase" className="py-20 px-4 scroll-mt-20">
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Showcase</h2>
+            <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+              See exactly how Prospect In works — from finding a LinkedIn event to importing leads into your CRM.
+            </p>
+          </div>
+          <Carousel
+            opts={{ loop: true }}
+            plugins={[autoplay.current]}
+            setApi={setApi}
+            className="w-full"
+          >
+            <CarouselContent>
+              {showcaseSlides.map((slide) => (
+                <CarouselItem key={slide.src}>
+                  <div className="rounded-2xl overflow-hidden shadow-2xl border border-border bg-card">
+                    <img
+                      src={slide.src}
+                      alt={slide.alt}
+                      className="w-full h-auto"
+                      loading="lazy"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
+          </Carousel>
+          <div className="flex justify-center gap-2 mt-6">
+            {showcaseSlides.map((_, i) => (
+              <button
+                key={i}
+                aria-label={`Go to slide ${i + 1}`}
+                onClick={() => api?.scrollTo(i)}
+                className={`h-2 rounded-full transition-all ${
+                  current === i ? "w-8 bg-primary" : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* How it works */}
-      <section id="how-it-works" className="py-20 px-4">
+      <section id="how-it-works" className="py-20 px-4 scroll-mt-20">
         <div className="container mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground">How It Works</h2>
