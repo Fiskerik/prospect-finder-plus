@@ -12,6 +12,8 @@ import Checkout from "./pages/Checkout.tsx";
 import CheckoutSuccess from "./pages/CheckoutSuccess.tsx";
 import AuthCallback from "./pages/AuthCallback.tsx";
 import Support from "./pages/Support.tsx";
+import Blog from "./pages/Blog.tsx";
+import BlogPost from "./pages/BlogPost.tsx";
 
 
 
