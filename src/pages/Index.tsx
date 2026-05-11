@@ -76,6 +76,7 @@ const Index = () => {
           <div className="flex items-center gap-4">
             <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">Features</a>
             <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">How It Works</a>
+            <Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors text-sm hidden sm:block">Blog</Link>
             <Button variant="hero" size="sm" asChild>
               <a href="https://chromewebstore.google.com/detail/prospect-in/nofakbgapbfghkpdlnkfaenigenlppdg/" target="_blank" rel="noopener noreferrer">Download</a>
             </Button>
@@ -310,6 +311,7 @@ const Index = () => {
           <div className="flex items-center gap-4">
             <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link>
+            <Link to="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</Link>
             <Link to="/support" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Support</Link>
           </div>
           <p className="text-sm text-muted-foreground">© 2026 Prospect In. All rights reserved.</p>

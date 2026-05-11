@@ -12,6 +12,8 @@ import Checkout from "./pages/Checkout.tsx";
 import CheckoutSuccess from "./pages/CheckoutSuccess.tsx";
 import AuthCallback from "./pages/AuthCallback.tsx";
 import Support from "./pages/Support.tsx";
+import Blog from "./pages/Blog.tsx";
+import BlogPost from "./pages/BlogPost.tsx";
 
 
 
@@ -32,6 +34,8 @@ const App = () => (
           <Route path="/checkout/success" element={<CheckoutSuccess />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
